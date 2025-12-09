@@ -76,9 +76,24 @@ const SEED_USERS = [
 const server = (0, fastify_1.default)({ logger: true });
 server.register(cors_1.default, {
     origin: (origin, cb) => {
-        // Allow localhost for dev, distinct for prod
-        const isLocal = !origin || /^http:\/\/localhost/.test(origin);
-        cb(null, isLocal); // Allow requests from localhost
+        // Allow requests from frontend URL and localhost
+        const allowedOrigins = [
+            process.env.FRONTEND_URL || 'http://localhost:5173',
+            'http://localhost:5173',
+            'http://localhost:3000',
+            'http://localhost:5174'
+        ];
+        // Allow requests with no origin (mobile apps, curl, etc.) in development
+        if (!origin) {
+            cb(null, true);
+            return;
+        }
+        if (allowedOrigins.includes(origin)) {
+            cb(null, true);
+        }
+        else {
+            cb(new Error('Not allowed by CORS'), false);
+        }
     },
     credentials: true // Allow cookies to be sent
 });
@@ -99,6 +114,19 @@ function logAudit(event) {
     });
 }
 // --- ROUTES ---
+// Health Check Endpoint
+server.get('/api/health', async (req, reply) => {
+    return reply.send({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        version: '1.1.0',
+        services: {
+            mongodb: 'connected', // You can add actual health checks here
+            redis: 'available'
+        }
+    });
+});
 // 1. Auth: Login
 server.post('/api/auth/login', async (req, reply) => {
     const { username, password } = req.body || {};

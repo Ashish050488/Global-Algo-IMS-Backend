@@ -2,6 +2,16 @@
 
 A robust Node.js + TypeScript backend supporting the Lead Management System, featuring a modular WhatsApp bulk messaging engine.
 
+## 🔗 Frontend Repository
+
+This backend connects with: [Global-Algo-IMS Frontend](https://github.com/itz-himanshu128/Global-Algo-IMS)
+
+## 📚 Documentation
+
+**New to the project?** See **[DOCS_INDEX.md](DOCS_INDEX.md)** for complete documentation navigation.
+
+**Quick Start:** See **[QUICK_START.md](QUICK_START.md)** or run `./setup-frontend.sh` to automatically set up everything.
+
 ## Directory Structure
 
 *   **`src/server.ts`**: Entry point. Handles HTTP routes, Auth, and Audit logging.
@@ -17,7 +27,6 @@ A robust Node.js + TypeScript backend supporting the Lead Management System, fea
 
 1.  **Dependencies**:
     ```bash
-    cd backend
     npm install
     ```
 
@@ -26,6 +35,10 @@ A robust Node.js + TypeScript backend supporting the Lead Management System, fea
     ```bash
     cp .env.example .env
     ```
+    
+    **Required Environment Variables:**
+    *   **PORT**: Backend server port (default: `3001`)
+    *   **FRONTEND_URL**: Frontend application URL for CORS (default: `http://localhost:5173`)
     *   **MongoDB**: Required for data persistence. Ensure MongoDB is running locally or provide a connection string.
     *   **Twilio**: Required for sending WhatsApp messages.
     *   **Redis**: Required for the message queue. Ensure Redis is running (`redis-server`).
@@ -40,6 +53,37 @@ A robust Node.js + TypeScript backend supporting the Lead Management System, fea
     *   Runs on `http://localhost:3001`.
     *   Automatically connects to MongoDB and initializes collections.
     *   Starts the internal background worker (if `ENABLE_WORKER=true`).
+
+## Connecting Frontend
+
+The backend is configured to work with the frontend repository: [Global-Algo-IMS](https://github.com/itz-himanshu128/Global-Algo-IMS)
+
+### Frontend Setup:
+
+1.  **Clone and setup frontend**:
+    ```bash
+    git clone https://github.com/itz-himanshu128/Global-Algo-IMS.git
+    cd Global-Algo-IMS
+    npm install
+    ```
+
+2.  **Configure Frontend Environment**:
+    Create a `.env` file in the frontend directory:
+    ```env
+    VITE_API_BASE_URL=http://localhost:3001/api
+    VITE_API_TIMEOUT=10000
+    ```
+
+3.  **Start Frontend**:
+    ```bash
+    npm run dev
+    ```
+    *   Frontend runs on `http://localhost:5173` by default.
+
+4.  **Access the Application**:
+    *   Frontend: `http://localhost:5173`
+    *   Backend API: `http://localhost:3001/api`
+    *   Login with demo credentials (see frontend LoginPage)
 
 ## Production Build
 
